@@ -43,6 +43,7 @@ final class YMEventsRowView: UIScrollView {
         backgroundColor  = .clear
         showsVerticalScrollIndicator   = false
         showsHorizontalScrollIndicator = false
+        tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
     }
 
     private func removeAllEventViews() {
@@ -94,12 +95,13 @@ final class YMEventsRowView: UIScrollView {
         contentSize = CGSize(width: bounds.width, height: (cellSpacing + itemHeight) * CGFloat(lineCount))
     }
 
-    private let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+    private var tapGesture: UITapGestureRecognizer!
 
     private func createEventView(range: NSRange, line: Int, indexPath: IndexPath) {
         if let cell = eventsRowDelegate?.eventsRowView(self, cellForEventAtIndexPath: indexPath) {
             cell.frame = rectForCell(range: range, line: line)
             cell.removeGestureRecognizer(tapGesture)
+            tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
             cell.addGestureRecognizer(tapGesture)
             cell.setNeedsDisplay()
             eventViews[indexPath] = cell
